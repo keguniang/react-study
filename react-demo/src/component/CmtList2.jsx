@@ -1,5 +1,6 @@
 import React from 'react'
 import CmtItem from '@/component/CmtItem2'
+import Cmtbox from '@/component/CmtBox'
 
 import listObj from '@/css/cmtlist.scss'
 console.log(listObj);
@@ -20,14 +21,29 @@ export default class CmtList extends React.Component {
             ]
         }
     }
+
+    // 渲染前加载评论列表
+    loadComment=()=>{
+        var cmtList = JSON.parse(localStorage.getItem('cmtList') || '[]')
+        this.setState({
+            CommentList:cmtList
+        })
+    }
+
+    UNSAFE_componentWillMount(){
+        this.loadComment()
+    }
     render() {
         var arr = this.state.CommentList.map(item =>
             <CmtItem key={item.id} {...item} />
         )
+
         return <div>
-            <button className='btn btn-primary'>按钮</button>
+            {/* 发表评论区域 */}
+            <Cmtbox reload={this.loadComment}/>
             {/* 第一个花括号是jsx语法，第二个花括号是对象 */}
             <h1 className={listObj.title + ' test'}>这是评论列表组件</h1>
+            {/* 渲染评论列表区域 */}
             {arr}
         </div>
     }
